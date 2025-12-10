@@ -2,13 +2,13 @@ package cat.itacademy.s04.t01.userapi.controllers;
 
 import cat.itacademy.s04.t01.userapi.entities.User;
 import cat.itacademy.s04.t01.userapi.exceptions.UserNotFoundException;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -16,11 +16,11 @@ public class UserController {
 
     private static List<User> users = new ArrayList<>();
 
-
+    /*
     @GetMapping("/users")
     public List<User> getUsers(){
         return users;
-    }
+    }*/
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user){
@@ -35,5 +35,16 @@ public class UserController {
                 .findFirst()
                 .orElseThrow(()-> new UserNotFoundException("NotFound(404)"));
 
+    }
+
+    @GetMapping("/users")
+    public List<User> getUserByName(@RequestParam(required = false) String name){
+        if(name == null){
+            return users;
+        }
+
+        return users.stream()
+                .filter(n->n.getName().toLowerCase().contains(name.toLowerCase()))
+                .toList();
     }
 }
