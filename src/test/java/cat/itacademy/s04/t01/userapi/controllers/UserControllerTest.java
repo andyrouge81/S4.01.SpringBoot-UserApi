@@ -40,11 +40,11 @@ class UserControllerTest {
         Map<String, String> body = new HashMap<>();
         body.put("name", "Pepito");
         body.put("email", "pepito@example.com");
-        String jsonMapper = mapper.writeValueAsString(body);
+        String jsonBody = mapper.writeValueAsString(body);
 
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonMapper))
+                .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").isNotEmpty())
@@ -60,11 +60,11 @@ class UserControllerTest {
         Map<String, String> body = new HashMap<>();
         body.put("name", "choripan");
         body.put("email", "choripa@example.com");
-        String objectMapper = mapper.writeValueAsString(body);
+        String jsonBody = mapper.writeValueAsString(body);
 
         MvcResult result = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper))
+                        .content(jsonBody))
 
                 .andExpect(status().isOk())
                 .andReturn();
@@ -86,14 +86,15 @@ class UserControllerTest {
         body.put("name", "ramon");
         body.put("email", "ramoncin@example.com");
 
-        String objectMapper = mapper.writeValueAsString(body);
+        String jsonBody = mapper.writeValueAsString(body);
 
-        MvcResult result = mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                 .content(objectMapper))
-                .andReturn();
+                 .content(jsonBody))
+                .andExpect(status().isOk());
 
         UUID id = UUID.randomUUID();
+
 
         mockMvc.perform(get("/users/{id}", id))
                 .andExpect(status().isNotFound());
