@@ -1,10 +1,12 @@
-package cat.itacademy.s04.t01.userapi.controllers;
+package cat.itacademy.s04.t01.userapi.integration;
 
+import cat.itacademy.s04.t01.userapi.controllers.UserController;
 import cat.itacademy.s04.t01.userapi.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -19,8 +21,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class UserIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,10 +31,6 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @BeforeEach
-    void setup(){
-        UserController.clearUsers();
-    }
 
     @Test
     void getUsers_returnEmptyListInitially() throws Exception{
@@ -51,8 +50,8 @@ class UserControllerTest {
         String jsonBody = mapper.writeValueAsString(body);
 
         mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
 
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -98,8 +97,8 @@ class UserControllerTest {
         String jsonBody = mapper.writeValueAsString(body);
 
         mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                 .content(jsonBody))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
                 .andExpect(status().isOk());
 
         UUID id = UUID.randomUUID();
@@ -124,7 +123,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         Map<String, String> body2 = new HashMap<>();
         body2.put("name", "jolian");
@@ -135,7 +134,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonBody2))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
 
 

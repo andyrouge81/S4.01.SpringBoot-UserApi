@@ -16,11 +16,6 @@ public class UserController {
 
     private static List<User> users = new ArrayList<>();
 
-    /*
-    @GetMapping("/users")
-    public List<User> getUsers(){
-        return users;
-    }*/
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user){
@@ -46,5 +41,9 @@ public class UserController {
         return users.stream()
                 .filter(n->n.getName().toLowerCase().contains(name.toLowerCase()))
                 .toList();
+    }
+
+    static void clearUsers(){
+        users.clear();
     }
 }
