@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
@@ -55,23 +56,48 @@ class UserControllerTest {
 
 
     @Test
-    void getUserById_returnsCorrectUser() throws Exception{
+    void getUserById_returnsCorrectUser() throws Exception {
         Map<String, String> body = new HashMap<>();
-        body.put("name","choripan");
-        body.put("email","choripa@example.com");
+        body.put("name", "choripan");
+        body.put("email", "choripa@example.com");
         String objectMapper = mapper.writeValueAsString(body);
 
-        mockMvc.perform(get("/users/{id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper))
+        MvcResult result = mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper))
+
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andReturn();
+
+        String responseJson = result.getResponse().getContentAsString();
+        User createUser = mapper.readValue(responseJson, User.class);
+
+        UUID id = createUser.getId();
+
+        mockMvc.perform(get("/users/{id}", id))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("choripan"));
 
-        // Primer afegeix un usuari amb POST
+    }
 
-        // Després GET /users/{id} i comprova que torni aquest usuari
+    @Test
+    void getUserById_returnsNotFoundIfMissing() throws Exception{
+        Map<String, String> body = new HashMap<>();
+        body.put("name", "ramon");
+        body.put("email", "ramoncin@example.com");
+
+        String objectMapper = mapper.writeValueAsString(body);
+
+        MvcResult result = mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                 .content(objectMapper))
+                .andReturn();
+
+        UUID id = UUID.randomUUID();
+
+        mockMvc.perform(get("/users/{id}", id))
+                .andExpect(status().isNotFound());
+
     }
 
 }
