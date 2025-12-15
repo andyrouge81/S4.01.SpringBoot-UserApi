@@ -41,11 +41,19 @@ public class InMemoryUserRepository implements UserRepository{
     }
 
     @Override
-    public boolean existsByEmail(String email){
+    public Optional<User> findByEmail(String email){
         String lowerEmail = email.toLowerCase();
         return users.stream()
-                .anyMatch(u->u.getEmail() != null && u.getEmail().toLowerCase().equals(lowerEmail));
+                .filter(u->u.getEmail() != null && u.getEmail().toLowerCase().equals(lowerEmail))
+                .findFirst();
 
     }
 
+
+    @Override
+    public void deleteById(UUID id){
+
+        users.removeIf(u-> u.getId().equals(id));
+
+    }
 }

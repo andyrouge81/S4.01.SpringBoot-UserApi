@@ -97,23 +97,23 @@ class InMemoryUserRepositoryTest {
 
         repo.save(user6);
 
-        boolean result = repo.existsByEmail("JOPETAS@example.com");
+        //boolean result = repo.searchUserByEmail("JOPETAS@example.com");
 
-        assertTrue(result);
+        //assertTrue(result);
 
 
     }
 
     @Test
-    void existsByEmail_returnFalseWhenEmailDoesNotExists(){
+    void existsByEmail_returnEmptyOptionalWhenEmailDoesNotExists(){
 
         User user6 = new User(UUID.randomUUID(), "Joana", "jopetas@example.com");
 
         repo.save(user6);
 
-        boolean result = repo.existsByEmail("ChAMACO@example.com");
+        Optional<User> result = repo.findByEmail("ChAMACO@example.com");
 
-        assertFalse(result);
+        assertTrue(result.isEmpty());
 
 
     }

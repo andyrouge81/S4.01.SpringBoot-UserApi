@@ -10,7 +10,8 @@ import java.util.UUID;
 @RestController
 public class UserController {
 
-    //private static List<User> users = new ArrayList<>();
+    //d'igual manera injecta la interface el servei al controlador.
+
     private final UserService userService;
 
     public UserController(UserService userservice){
