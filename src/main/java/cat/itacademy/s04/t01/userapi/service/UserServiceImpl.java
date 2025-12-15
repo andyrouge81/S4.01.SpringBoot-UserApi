@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user){
 
         if (user == null){
-            throw new IllegalArgumentException("User Empty");
+            throw new IllegalArgumentException("Error: User Empty");
         }
 
         validateEmail(user.getEmail());
 
         if(repo.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User already exists");
+            throw new UserAlreadyExistsException("Error: User already exists");
         }
         user.setId(UUID.randomUUID());
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService{
         Optional<User> foundUser = repo.findByEmail(email);
 
         if(foundUser.isEmpty()){
-            throw new UserNotFoundException("Error: User not found wit email: "+email);
+            throw new UserNotFoundException("Error: User not found with email: "+email);
         }
 
         return foundUser.get();
