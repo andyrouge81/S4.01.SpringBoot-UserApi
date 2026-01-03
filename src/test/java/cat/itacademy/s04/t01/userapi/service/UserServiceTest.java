@@ -45,6 +45,26 @@ class UserServiceTest {
         verify(userRepository, never()).save(any(User.class));
 
     }
+    @Test
+    void createUser_whenNameIsNull_throwException(){
+
+        User user = new User(null, null, "name@example.com");
+
+        assertThrows(IllegalArgumentException.class, ()->userService.createUser(user));
+
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void createUser_whenNameIsBlank_throwException(){
+
+        User user = new User(null, " ", "name@example.com");
+
+        assertThrows(IllegalArgumentException.class, ()->userService.createUser(user));
+
+        verify(userRepository, never()).save(any(User.class));
+
+    }
 
     @Test
     void createUser_shouldGenerateAnIdAndSaveUser_whenEmailDoesNotExist(){
