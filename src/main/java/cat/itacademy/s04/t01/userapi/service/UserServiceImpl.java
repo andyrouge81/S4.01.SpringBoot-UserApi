@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException("Error: User Empty");
         }
 
+        validateName(user.getName());
         validateEmail(user.getEmail());
 
         if(repo.findByEmail(user.getEmail()).isPresent()) {
@@ -117,7 +118,13 @@ public class UserServiceImpl implements UserService{
 
     private void validateEmail(String email){
         if(email == null || email.isBlank()){
-            throw new IllegalArgumentException("Email could nor be null or empty");
+            throw new IllegalArgumentException("Email could not be null or blank");
+        }
+    }
+
+    private void validateName(String name){
+        if(name == null || name.isBlank()){
+            throw new IllegalArgumentException("Email could not be null or blank");
         }
     }
 }
